@@ -1,0 +1,40 @@
+* { box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Helvetica, Arial, sans-serif; line-height: 1.4; color: #222; background: #f6f7fb; }
+.container { max-width: 1000px; margin: 0 auto; padding: 16px; }
+.header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.nav a { margin-right: 12px; text-decoration: none; color: #0366d6; }
+.nav a:hover { text-decoration: underline; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid.two { grid-template-columns: 1fr 1fr; }
+.card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.kpis { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.kpi { background: #f3f4f6; padding: 12px; border-radius: 6px; }
+.kpi.positive { color: #1b9c5a; }
+.kpi.negative { color: #c0392b; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grid label { display: grid; gap: 6px; font-size: 14px; }
+.form-grid input, .form-grid select { padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 6px; }
+.form-actions { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; }
+button { background: #0d6efd; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+button:hover { background: #0b5ed7; }
+button.danger { background: #dc3545; }
+button.danger:hover { background: #bb2d3b; }
+.link { color: #0366d6; text-decoration: none; }
+.link:hover { text-decoration: underline; }
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td { border-bottom: 1px solid #eee; padding: 8px; text-align: left; }
+.table .num { text-align: right; }
+.positive { color: #1b9c5a; }
+.negative { color: #c0392b; }
+.muted { color: #6b7280; }
+.filters { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+.filters label { display: grid; gap: 6px; font-size: 14px; }
+.flash-list { list-style: none; padding: 0; margin: 0 0 12px; }
+.flash { padding: 8px 10px; border-radius: 6px; margin-bottom: 8px; }
+.flash.success { background: #eafaf1; color: #1b9c5a; border: 1px solid #bfe7d1; }
+.flash.error { background: #fdecea; color: #b42318; border: 1px solid #f5c2c7; }
+@media (max-width: 800px) {
+	.grid { grid-template-columns: 1fr; }
+	.kpis { grid-template-columns: 1fr; }
+	.form-grid { grid-template-columns: 1fr; }
+}

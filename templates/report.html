@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+	<h2>Отчет по категориям ({{ start }} — {{ end }})</h2>
+	<div class="grid two">
+		<div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Категория</th>
+						<th class="num">Доход</th>
+						<th class="num">Расход</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for r in rows %}
+					<tr>
+						<td>{{ r.category_name }}</td>
+						<td class="num positive">{{ '%.2f'|format(r.income_total or 0) }}</td>
+						<td class="num negative">{{ '%.2f'|format(r.expense_total or 0) }}</td>
+					</tr>
+					{% endfor %}
+					<tr>
+						<th>Итого</th>
+						<th class="num positive">{{ '%.2f'|format(monthly_income or 0) }}</th>
+						<th class="num negative">{{ '%.2f'|format(monthly_expense or 0) }}</th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div>
+			<canvas id="chart" width="400" height="300"></canvas>
+		</div>
+	</div>
+</section>
+<script>
+const ctx = document.getElementById('chart').getContext('2d');
+const data = {
+	labels: [{% for r in rows %}'{{ r.category_name }}',{% endfor %}],
+	datasets: [
+		{
+			label: 'Доход',
+			backgroundColor: 'rgba(46, 204, 113, 0.5)',
+			borderColor: 'rgba(46, 204, 113, 1)',
+			data: [{% for r in rows %}{{ (r.income_total or 0)|round(2) }},{% endfor %}]
+		},
+		{
+			label: 'Расход',
+			backgroundColor: 'rgba(231, 76, 60, 0.5)',
+			borderColor: 'rgba(231, 76, 60, 1)',
+			data: [{% for r in rows %}{{ (r.expense_total or 0)|round(2) }},{% endfor %}]
+		}
+	]
+};
+new Chart(ctx, { type: 'bar', data });
+</script>
+{% endblock %}
