@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="grid">
+	<div class="card">
+		<h2>Итоги за месяц</h2>
+		<div class="kpis">
+			<div class="kpi positive">Доход: <strong>{{ '%.2f'|format(month_income) }}</strong></div>
+			<div class="kpi negative">Расход: <strong>{{ '%.2f'|format(month_expense) }}</strong></div>
+			<div class="kpi">Баланс (все время): <strong>{{ '%.2f'|format(balance) }}</strong></div>
+		</div>
+	</div>
+	<div class="card">
+		<h2>Добавить операцию</h2>
+		<form action="{{ url_for('add_transaction') }}" method="post" class="form-grid" id="trx-form">
+			<label>Дата
+				<input type="date" name="date" value="{{ today }}" required>
+			</label>
+			<label>Тип
+				<select name="type" id="type-select" required>
+					<option value="income">Доход</option>
+					<option value="expense">Расход</option>
+				</select>
+			</label>
+			<label>Категория
+				<select name="category_id" id="category-select" required>
+					<optgroup label="Доход" data-type="income">
+						{% for c in income_categories %}
+						<option value="{{ c.id }}">{{ c.name }}</option>
+						{% endfor %}
+					</optgroup>
+					<optgroup label="Расход" data-type="expense">
+						{% for c in expense_categories %}
+						<option value="{{ c.id }}">{{ c.name }}</option>
+						{% endfor %}
+					</optgroup>
+				</select>
+			</label>
+			<label>Сумма
+				<input type="number" name="amount" step="0.01" min="0" placeholder="0.00" required>
+			</label>
+			<label>Описание
+				<input type="text" name="description" placeholder="Комментарий (необязательно)">
+			</label>
+			<div class="form-actions">
+				<button type="submit">Добавить</button>
+				<a class="link" href="{{ url_for('categories') }}">Управлять категориями</a>
+			</div>
+		</form>
+	</div>
+</section>
+
+<section class="card">
+	<h2>Последние операции</h2>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Дата</th>
+				<th>Тип</th>
+				<th>Категория</th>
+				<th class="num">Сумма</th>
+				<th>Описание</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for t in latest %}
+			<tr>
+				<td>{{ t.date }}</td>
+				<td>{{ 'Доход' if t.type == 'income' else 'Расход' }}</td>
+				<td>{{ t.category_name }}</td>
+				<td class="num {{ 'positive' if t.type == 'income' else 'negative' }}">{{ '%.2f'|format(t.amount) }}</td>
+				<td>{{ t.description }}</td>
+				<td>
+					<form action="{{ url_for('delete_transaction', trx_id=t.id) }}" method="post" onsubmit="return confirm('Удалить операцию?');">
+						<button type="submit" class="danger">Удалить</button>
+					</form>
+				</td>
+			</tr>
+			{% else %}
+			<tr><td colspan="6" class="muted">Записей пока нет</td></tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+
+<script>
+const typeSelect = document.getElementById('type-select');
+const categorySelect = document.getElementById('category-select');
+
+function filterCategories() {
+	const type = typeSelect.value;
+	[...categorySelect.querySelectorAll('optgroup')].forEach(g => {
+		g.style.display = g.dataset.type === type ? 'block' : 'none';
+	});
+	const visibleGroup = categorySelect.querySelector(`optgroup[data-type="${type}"]`);
+	if (visibleGroup && visibleGroup.children.length) {
+		categorySelect.value = visibleGroup.children[0].value;
+	}
+}
+
+typeSelect.addEventListener('change', filterCategories);
+filterCategories();
+</script>
+{% endblock %}
